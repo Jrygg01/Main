@@ -1,68 +1,75 @@
-import unittest
+import pytest
 from account import *
 
 
-class MyTestCase(unittest.TestCase):
-    delta_value = 0.001
-
-    def setUp(self):
+class Test:
+    def setup_method(self):
         self.p1 = Account('001-John')
         self.p2 = Account('002-Jane')
 
-    def tearDown(self):
+    def teardown_method(self):
         del self.p1
         del self.p2
 
     def test_init(self):
-        self.assertAlmostEqual(self.p1.get_name(), '001-John')
-        self.assertAlmostEqual(self.p2.get_name(), '002-Jane')
+        assert self.p1.get_name() == '001-John'
+        assert self.p2.get_name() == '002-Jane'
 
-        self.assertAlmostEqual(self.p1.get_balance(), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.get_balance(), 0, delta=self.delta_value)
+        assert self.p1.get_balance() == 0
+        assert self.p2.get_balance() == 0
 
     def test_deposit(self):
         self.p1.deposit(5)
-        self.assertAlmostEqual(self.p1.get_balance(), 5, delta=self.delta_value)
+        assert self.p1.get_balance() == 5
 
         self.p2.deposit(5)
-        self.assertAlmostEqual(self.p2.get_balance(), 5, delta=self.delta_value)
+        assert self.p2.get_balance() == 5
 
         self.p1.deposit(-5)
-        self.assertAlmostEqual(self.p1.get_balance(), 5, delta=self.delta_value)
+        assert self.p1.get_balance() == 5
 
         self.p2.deposit(-5)
-        self.assertAlmostEqual(self.p2.get_balance(), 5, delta=self.delta_value)
+        assert self.p2.get_balance() == 5
 
         self.p1.deposit(0)
-        self.assertAlmostEqual(self.p1.get_balance(), 5, delta=self.delta_value)
+        assert self.p1.get_balance() == 5
 
         self.p2.deposit(0)
-        self.assertAlmostEqual(self.p2.get_balance(), 5, delta=self.delta_value)
+        assert self.p2.get_balance() == 5
 
-        self.assertTrue(self.p1.deposit(1))
-        self.assertFalse(self.p1.deposit(-1))
+        assert self.p1.deposit(1) is True
+        assert self.p1.deposit(-1) is False
 
     def test_withdraw(self):
-        self.assertAlmostEqual(self.p1.get_balance(), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.get_balance(), 0, delta=self.delta_value)
 
-        self.assertAlmostEqual(self.p1.withdraw(5), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.withdraw(5), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p1.withdraw(0), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.withdraw(0), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p1.withdraw(-5), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.withdraw(-5), 0, delta=self.delta_value)
+        assert self.p1.get_balance() == 0
+        assert self.p2.get_balance() == 0
+
+        self.p1.withdraw(5)
+        self.p2.withdraw(5)
+        assert self.p1.get_balance() == 0
+        assert self.p2.get_balance() == 0
+
+        self.p1.withdraw(0)
+        self.p2.withdraw(0)
+        assert self.p1.get_balance() == 0
+        assert self.p2.get_balance() == 0
+
+        self.p1.withdraw(-5)
+        self.p2.withdraw(-5)
+        assert self.p1.get_balance() == 0
+        assert self.p2.get_balance() == 0
 
         self.p1.deposit(5)
         self.p2.deposit(5)
 
-        self.assertAlmostEqual(self.p1.withdraw(5), 0, delta=self.delta_value)
-        self.assertAlmostEqual(self.p2.withdraw(4), 1, delta=self.delta_value)
+        self.p1.withdraw(5)
+        assert self.p1.get_balance() == 0
 
-        self.assertTrue(self.p1.withdraw(1))
-        self.assertFalse(self.p1.withdraw(-1))
-        self.assertFalse(self.p1.withdraw(11))
+        self.p2.withdraw(4)
+        assert self.p2.get_balance() == 1
 
+        assert self.p1.withdraw(1) is True
+        assert self.p1.withdraw(-1) is False
+        assert self.p1.withdraw(11) is False
 
-if __name__ == '__main__':
-    unittest.main()
