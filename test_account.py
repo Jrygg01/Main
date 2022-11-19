@@ -64,7 +64,7 @@ class Test:
         self.p2.deposit(5)
 
         self.p1.withdraw(5)
-        assert self.p1.get_balance() == 0
+        assert self.p1.get_balance() == 5
 
         self.p2.withdraw(4)
         assert self.p2.get_balance() == 1
