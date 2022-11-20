@@ -2,74 +2,70 @@ import pytest
 from account import *
 
 
-class Test:
-    def setup_method(self):
-        self.p1 = Account('001-John')
-        self.p2 = Account('002-Jane')
+p1 = Account('001-John')
+p2 = Account('002-Jane')
 
-    def teardown_method(self):
-        del self.p1
-        del self.p2
 
-    def test_init(self):
-        assert self.p1.get_name() == '001-John'
-        assert self.p2.get_name() == '002-Jane'
+#assert self.p1.get_balance() == approx(20.5, abs=0.001)
+def test_init():
+    assert p1.get_name() == '001-John'
+    assert p2.get_name() == '002-Jane'
 
-        assert self.p1.get_balance() == 0
-        assert self.p2.get_balance() == 0
+    assert p1.get_balance() == pytest.approx(0, abs=0.001)
+    assert p2.get_balance() == pytest.approx(0, abs=0.001)
 
-    def test_deposit(self):
-        self.p1.deposit(5)
-        assert self.p1.get_balance() == 5
 
-        self.p2.deposit(5)
-        assert self.p2.get_balance() == 5
+def test_deposit():
+    p1.deposit(5)
+    assert p1.get_balance() == pytest.approx(5, abs=0.001)
 
-        self.p1.deposit(-5)
-        assert self.p1.get_balance() == 5
+    p2.deposit(5)
+    assert p2.get_balance() == pytest.approx(5, abs=0.001)
 
-        self.p2.deposit(-5)
-        assert self.p2.get_balance() == 5
+    p1.deposit(-5)
+    assert p1.get_balance() == pytest.approx(5, abs=0.001)
 
-        self.p1.deposit(0)
-        assert self.p1.get_balance() == 5
+    p2.deposit(-5)
+    assert p2.get_balance() == pytest.approx(5, abs=0.001)
 
-        self.p2.deposit(0)
-        assert self.p2.get_balance() == 5
+    p1.deposit(0)
+    assert p1.get_balance() == pytest.approx(5, abs=0.001)
 
-        assert self.p1.deposit(1) is True
-        assert self.p1.deposit(-1) is False
+    p2.deposit(0)
+    assert p2.get_balance() == pytest.approx(5, abs=0.001)
 
-    def test_withdraw(self):
+    assert p1.deposit(1) is True
+    assert p1.deposit(-1) is False
 
-        assert self.p1.get_balance() == 0
-        assert self.p2.get_balance() == 0
 
-        self.p1.withdraw(5)
-        self.p2.withdraw(5)
-        assert self.p1.get_balance() == 0
-        assert self.p2.get_balance() == 0
+def test_withdraw():
+    assert p1.get_balance() == pytest.approx(0, abs=0.001)
+    assert p2.get_balance() == pytest.approx(0, abs=0.001)
 
-        self.p1.withdraw(0)
-        self.p2.withdraw(0)
-        assert self.p1.get_balance() == 0
-        assert self.p2.get_balance() == 0
+    p1.withdraw(5)
+    p2.withdraw(5)
+    assert p1.get_balance() == pytest.approx(0, abs=0.001)
+    assert p2.get_balance() == pytest.approx(0, abs=0.001)
 
-        self.p1.withdraw(-5)
-        self.p2.withdraw(-5)
-        assert self.p1.get_balance() == 0
-        assert self.p2.get_balance() == 0
+    p1.withdraw(0)
+    p2.withdraw(0)
+    assert p1.get_balance() == pytest.approx(0, abs=0.001)
+    assert p2.get_balance() == pytest.approx(0, abs=0.001)
 
-        self.p1.deposit(5)
-        self.p2.deposit(5)
+    p1.withdraw(-5)
+    p2.withdraw(-5)
+    assert p1.get_balance() == pytest.approx(0, abs=0.001)
+    assert p2.get_balance() == pytest.approx(0, abs=0.001)
 
-        self.p1.withdraw(5)
-        assert self.p1.get_balance() == 5
+    p1.deposit(5)
+    p2.deposit(5)
 
-        self.p2.withdraw(4)
-        assert self.p2.get_balance() == 1
+    p1.withdraw(5)
+    assert p1.get_balance() == pytest.approx(5, abs=0.001)
 
-        assert self.p1.withdraw(1) is True
-        assert self.p1.withdraw(-1) is False
-        assert self.p1.withdraw(11) is False
+    p2.withdraw(4)
+    assert p2.get_balance() == pytest.approx(1, abs=0.001)
 
+    assert p1.withdraw(1) is True
+    assert p1.withdraw(-1) is False
+    assert p1.withdraw(11) is False
